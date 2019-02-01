@@ -7,14 +7,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FileUtils {
-	public static void appendLine(String s, File f) {
-		PrintWriter writer = null;
+	public static void appendLine(String s, PrintWriter writer) {
 		try {
-			writer = new PrintWriter(f.getAbsolutePath(), "UTF-8");
 			writer.append(s);
-			writer.close();
 		} catch (Exception e) {
-			// 
+			e.printStackTrace();
 		}
 	}
 	

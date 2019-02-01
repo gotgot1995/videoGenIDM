@@ -2,23 +2,28 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.List;
 
 public class FFMpegUtils {
-	public static void concatVideo(List<String> playList) {
-		File file = new File("tmpList.txt");
+	public static void concatVideos(List<String> playList) {
+		File f = new File(playList.get(0));
+		File file = new File(f.getParent() + "/tmpList.txt");
+		
 		try {
 			file.createNewFile();
+			PrintWriter writer = new PrintWriter(file, "UTF-8");
 			
 			playList.forEach(video -> {
-				FileUtils.appendLine(String.format("file '%s'", video), file);
+				FileUtils.appendLine(String.format("file '%s'\n", video), writer);
 			});
+			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		runCommand(String.format("ffmpeg -f concat -safe 0 -i tmpList.txt -c copy output.mp4"));
+		runCommand(String.format("ffmpeg -f concat -safe 0 -i %s -c copy output.mp4", file.getAbsolutePath()));
 	}
 	
 	public static void runCommand(String command) {

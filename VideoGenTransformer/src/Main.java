@@ -1,7 +1,8 @@
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -11,6 +12,7 @@ public class Main {
 		}
 		
 		List<File> files = FileUtils.getFilesList(args[0]);
+		File folder = new File(args[0]);
 		Optional<File> videogenFile =
 				files.stream().filter(f -> f.getName().endsWith(".videogen")).findFirst();
 		
@@ -18,6 +20,11 @@ public class Main {
 			throw new RuntimeException("Impossible de trouver le fichier .videogen");
 		}
 		
-		System.out.println(videogenFile.get().getPath());
+		VideoGen videoGen = new VideoGen(videogenFile.get().getPath());
+		List<String> videosList = videoGen.getPlaylist().stream().map(s -> {
+			return folder.getAbsolutePath() + "/" + s;
+		}).collect(Collectors.toList());
+		
+		FFMpegUtils.concatVideos(videosList);
 	}
 }

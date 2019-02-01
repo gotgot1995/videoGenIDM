@@ -6,14 +6,14 @@ import org.eclipse.emf.common.util.URI;
 
 import fr.istic.videoGen.AlternativesMedia;
 import fr.istic.videoGen.MandatoryMedia;
+import fr.istic.videoGen.MediaDescription;
 import fr.istic.videoGen.OptionalMedia;
 import fr.istic.videoGen.VideoGeneratorModel;
 
-public class VideoGenService {
-	private static List<String> myPlaylist = new ArrayList<String>();
+public class VideoGen {
+	private List<String> myPlaylist = new ArrayList<String>();
 	
-	public static List<String> getPlaylist(String specPath) {
-		
+	public VideoGen(String specPath) {
 		VideoGeneratorModel videoGen = new VideoGenHelper().loadVideoGenerator(URI.createURI(specPath));
 
 		videoGen.getMedias().forEach(media -> {
@@ -27,11 +27,16 @@ public class VideoGenService {
 					myPlaylist.add(o.getDescription().getLocation());
 				}
 			} else if (media instanceof AlternativesMedia) {
-				// TODO: gen number between X options
+				AlternativesMedia altMedia = (AlternativesMedia) media;
+				Random r = new Random();
+				MediaDescription pickedMedia = altMedia.getMedias().get(r.nextInt(altMedia.getMedias().size()));
+				this.myPlaylist.add(pickedMedia.getLocation());
 			}
 		});
-		
-		return myPlaylist;
+	}
+
+	public List<String> getPlaylist() {
+		return this.myPlaylist;
 	}
 
 
