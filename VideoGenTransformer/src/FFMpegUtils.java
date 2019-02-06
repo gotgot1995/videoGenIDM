@@ -22,8 +22,8 @@ public class FFMpegUtils {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		runCommand(String.format("ffmpeg -f concat -safe 0 -i %s -c copy output.mp4", file.getAbsolutePath()));
+		String outputPath = file.getParentFile().getAbsolutePath() + "/output.mp4";
+		runCommand(String.format("ffmpeg -f concat -safe 0 -i %s -c copy %s", file.getAbsolutePath(), outputPath));
 	}
 	
 	public static void runCommand(String command) {
